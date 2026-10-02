@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_account_move_form_builty" model="ir.ui.view">
+        <field name="name">account.move.form.builty</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+
+        <field name="arch" type="xml">
+
+            <!-- Builty Image -->
+            <xpath expr="//field[@name='invoice_date']" position="after">
+                <newline/>
+                <field name="builty_image"
+                       widget="image"
+                       class="oe_avatar"/>
+            </xpath>
+
+            <!-- Whatsapp Builty Button -->
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_whatsapp_builty"
+                    type="object"
+                    string="Whatsapp Builty"
+                    class="oe_highlight"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Define a new view to inherit and extend the 'res.users' form view -->
+    <record id="view_users_form" model="ir.ui.view">
+        <field name="name">res.users.view.form.inherit.access.restriction.by.ip</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <!-- <xpath expr="//header" position='after'>
+            </xpath> -->
+            <xpath expr="//page[1]" position='after'>
+                <page string="Allowed IP">
+                    <group>
+                        <button name='action_check_current_ip' string='Check Current IP' type='object' class='oe_highlight' />
+                        <group>
+                            <field name='current_ip' />
+                        </group>
+                        <group/>
+                    </group>
+                    <field name="allowed_ip_ids">
+                        <list editable="bottom" delete="1">
+                            <field name="ip_address" required="1"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

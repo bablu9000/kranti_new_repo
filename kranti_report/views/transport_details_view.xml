@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_transport_form" model="ir.ui.view">
+        <field name="name">transport.details.form</field>
+        <field name="model">transport.details</field>
+        <field name="arch" type="xml">
+            <form string="Transport Detail">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="transport_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_transport_list" model="ir.ui.view">
+        <field name="name">transport.details.list</field>
+        <field name="model">transport.details</field>
+        <field name="arch" type="xml">
+            <list string="Transport Details" editable="bottom">
+                <field name="name"/>
+                <field name="transport_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_transport_details" model="ir.actions.act_window">
+        <field name="name">Transport Details</field>
+        <field name="res_model">transport.details</field>
+        <field name="view_mode">list,form</field>
+        <field name="target">current</field>
+    </record>
+
+    <!-- Menu under Contacts -->
+    <menuitem id="menu_transport_root" name="Transport" parent="contacts.menu_contacts" sequence="20"/>
+    <menuitem id="menu_transport_details" name="Transport Details" parent="menu_transport_root" action="action_transport_details"/>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="hide_discount_column_sale_order"
+              inherit_id="sale.report_saleorder_document">
+        <!-- Remove Discount Header -->
+        <xpath expr="//th[@name='th_discount']"
+               position="replace"/>
+        <!-- Remove Discount Column -->
+        <xpath expr="//td[@name='td_product_discount']"
+               position="replace"/>
+        <!-- Replace Unit Price -->
+        <xpath expr="//td[@name='td_product_priceunit']/span[@t-field='line.price_unit']"
+               position="replace">
+            <span
+                t-field="line.discounted_unit_price"
+                t-options='{"widget":"monetary","display_currency":doc.currency_id}'/>
+        </xpath>
+    </template>
+</odoo>

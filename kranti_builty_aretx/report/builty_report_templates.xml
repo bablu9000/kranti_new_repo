@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="builty_report_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+
+                <div class="page">
+                    <t t-if="o.builty_image">
+                        <img t-att-src="image_data_uri(o.builty_image)"
+                             style="width: 100%; height: auto;"/>
+                    </t>
+
+                    <t t-if="not o.builty_image">
+                        <p>No Builty image uploaded.</p>
+                    </t>
+                </div>
+
+            </t>
+        </t>
+    </template>
+
+</odoo>

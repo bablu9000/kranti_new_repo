@@ -1,0 +1,87 @@
+<odoo>
+    <record id="sale_order_form_transporter" model="ir.ui.view">
+        <field name="name">sale.order.form.transporter</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+
+        <field name="arch" type="xml">
+
+            <!-- WhatsApp Button -->
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_open_whatsapp_composer"
+                    type="object"
+                    string="WhatsApp"
+                    class="oe_highlight"/>
+            </xpath>
+
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+
+                <field name="transporter_id" options="{'no_create': True, 'no_create_edit': True}"/>
+
+                <field name="booking_name"/>
+                <field name="kppl_number"/>
+                <field name="boxes"/>
+                <field name="bags"/>
+                <field name="total" readonly="True"/>
+
+            </xpath>
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_uom_qty']" position="after">
+                <xpath expr="//field[@name='order_line']/list/field[@name='price_unit']" position="move"/>
+                <xpath expr="//field[@name='order_line']/list/field[@name='product_uom_id']" position="move"/>
+                <xpath expr="//field[@name='order_line']/list/field[@name='discount']" position="move"/>
+                <xpath expr="//field[@name='order_line']/list/field[@name='tax_ids']" position="move"/>
+                <xpath expr="//field[@name='order_line']/list/field[@name='price_subtotal']" position="move"/>
+                <xpath expr="//field[@name='order_line']/list/field[@name='qty_delivered']" position="move"/>
+                <xpath expr="//field[@name='order_line']/list/field[@name='qty_invoiced']" position="move"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Quotation List - Total Packages -->
+    <record id="quotation_list_view_total_packages" model="ir.ui.view">
+        <field name="name">quotation.list.view.total.packages</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//list/field[@name='amount_total']" position="before">
+                <field name="total"
+                    string="Total Pkgs"
+                    optional="show"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- report -->
+     <template id="sale_order_report_transporter"
+              inherit_id="sale.report_saleorder_document">
+
+        <xpath expr="//div[@id='informations']/div[last()]" position="after">
+
+            <div class="col">
+                <strong>Transporter</strong>
+                <div t-if="doc.transporter_id" t-field="doc.transporter_id"/>
+            </div>
+
+            <div class="col">
+                <strong>Booking Name</strong>
+                <div t-if="doc.booking_name" t-field="doc.booking_name"/>
+            </div>
+
+            <div class="col">
+                <strong>KPPL Order No.</strong>
+                <div t-if="doc.kppl_number" t-field="doc.kppl_number"/>
+            </div>
+
+            <div class="col">
+                <strong>No. of Packages</strong>
+                <div><span t-esc="doc.boxes"/> [Boxes] + <span t-esc="doc.bags"/> [Bags] = <span t-esc="doc.total"/>
+                </div>
+            </div>
+
+        </xpath>
+
+    </template>
+</odoo>

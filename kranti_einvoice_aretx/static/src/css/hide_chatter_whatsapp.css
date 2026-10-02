@@ -1,0 +1,4 @@
+/* Hide native WhatsApp button from Odoo Chatter */
+.o-mail-Chatter button[data-hotkey="shift+w"] {
+    display: none !important;
+}

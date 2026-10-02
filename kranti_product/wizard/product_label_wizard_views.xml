@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_label_wizard_form_view" model="ir.ui.view">
+        <field name="name">product.label.wizard.form</field>
+        <field name="model">product.label.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Print Product Label">
+                <group>
+                    <field name="product_template_id" invisible="0"/>
+                    <!-- REMOVED: lot_id no longer needed — all data now comes from product.template -->
+                    <!-- <field name="lot_id"/> -->
+                    <field name="batch_number"/>
+                    <!-- CHANGED: was Many2many with many2many_tags widget — now Many2one -->
+                    <!-- <field name="packaging_ids" widget="many2many_tags"/> -->
+                    <!-- ADDED: invisible field for domain reference -->
+                    <field name="allowed_uom_ids" invisible="1"/>
+                    <field name="packaging_id"/>
+                </group>
+                <footer>
+                    <button name="action_print_label" string="Print Label"
+                            type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_product_label_wizard" model="ir.actions.act_window">
+        <field name="name">Print Product Label</field>
+        <field name="res_model">product.label.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

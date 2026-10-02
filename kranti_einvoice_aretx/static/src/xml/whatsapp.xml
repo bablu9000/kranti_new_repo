@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+
+    <t t-name="kranti_einvoice_aretx.PartnerLedgerLineName"
+       t-inherit="account_reports.PartnerLedgerLineName"
+       t-inherit-mode="extension">
+
+        <xpath expr="//t[@data-id='line_buttons']" position="inside">
+
+            <t t-if="props.line.unfoldable">
+
+                <!-- Existing Partner button -->
+                <button
+                    class="btn btn_action"
+                    t-on-click="(ev) => controller.reportAction(
+                        ev,
+                        'action_open_partner',
+                        { id: props.line.id }
+                    )"
+                >
+                    Partner
+                </button>
+
+                <!-- Existing Journal Items button -->
+                <button
+                    class="btn btn_action"
+                    t-on-click="(ev) => controller.reportAction(
+                        ev,
+                        'open_journal_items',
+                        {
+                            line_id: props.line.id,
+                            view_ref: 'account.view_move_line_tree_grouped_partner',
+                        }
+                    )"
+                >
+                    Journal Items
+                </button>
+
+                <!-- NEW WhatsApp button -->
+                <button
+                    class="btn btn_action"
+                    t-on-click="(ev) => controller.reportAction(
+                        ev,
+                        'action_send_partner_ledger_whatsapp',
+                        { id: props.line.id }
+                    )"
+                >
+                    WhatsApp
+                </button>
+
+            </t>
+
+        </xpath>
+
+    </t>
+
+</templates>

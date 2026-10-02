@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_delivery_label" model="ir.actions.report">
+        <field name="name">Delivery Label</field>
+        <field name="model">delivery.label.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">kranti_product.report_delivery_label</field>
+        <field name="report_file">kranti_product.report_delivery_label</field>
+        <field name="print_report_name">'Delivery Label - %s' % (object.order_no)</field>
+        <field name="paperformat_id" ref="kranti_product.paperformat_label_15x10"/>
+    </record>
+</odoo>

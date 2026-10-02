@@ -1,0 +1,27 @@
+# -*- coding: utf-8 -*-
+{
+    'name': "Kranti Reports",
+    'version': "1.0",
+    'category': "Sale Order",
+    'website': 'www.hmrcgroups.com',
+    'author': 'HMRC Industry Private Limited',
+    'sequence': 1,
+    'support': 'contact@hmrcgroups.com',
+    'summary': "Sale Order Report",
+    'license': 'LGPL-3',
+    'author': "HMRC",
+    'depends': ['base','sale','contacts'],
+    'data': [
+        'security/ir.model.access.csv',
+        'views/transport_details_view.xml',
+        'views/res_partner_view.xml',
+        'views/sale_order_view.xml',
+        'Reports/kranti_invoice_report.xml',
+        'Reports/sale_order_report.xml',
+        'Reports/custom_header.xml',
+    ],
+    'images': [],
+    'application': True,
+    'installable': True,
+    'auto_install': False,
+}

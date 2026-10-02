@@ -1,0 +1,22 @@
+<odoo>
+
+    <template id="report_saleorder_srno"
+              inherit_id="sale.report_saleorder_document">
+
+        <!-- Header -->
+        <xpath expr="//th[@name='th_description']" position="before">
+            <th class="text-center" style="width:40px;">
+                Sr.
+            </th>
+        </xpath>
+
+        <!-- Product row -->
+        <xpath expr="//td[@name='td_product_name']" position="before">
+            <td class="text-center">
+                <span t-field="line.line_no"/>
+            </td>
+        </xpath>
+
+    </template>
+
+</odoo>

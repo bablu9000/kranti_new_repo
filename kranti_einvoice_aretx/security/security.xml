@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="group_hide_fully_invoiced_sale_orders"
+            model="res.groups">
+        <field name="name">Hide Fully Invoiced Sale Orders</field>
+    </record>
+
+</odoo>

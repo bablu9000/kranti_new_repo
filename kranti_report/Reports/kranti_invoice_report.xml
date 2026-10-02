@@ -1,0 +1,515 @@
+<odoo>
+  <template id="report_invoice_pdf">    
+    <t t-call="web.html_container">     
+      <t t-call="kranti_report.external_layout_boxed_custom">
+        <div class="page">
+            <!-- <table class="table table-borderless" style=" margin-top:0px; width : 100%; border-collapse: collapse; border-left: none; border-right: none; border"> -->
+            <tr>
+                <td style="width: 50%; ">
+                    <span><center><strong><b style="font-size:25px;">Tax Invoice</b></strong></center></span><br/>
+                    <table style="width:100%; border-collapse:collapse; border:2px solid black; border-bottom:none;">
+                        <tr>
+                            <td style="width:38%; vertical-align:top;">
+                                <b style="font-weight:bold;">Buyer :</b>
+                                <b><t t-esc="docs[0].partner_id.name"/></b><br/>
+                                <t t-esc="docs[0].partner_id.street"/><br/>
+                                <t t-esc="docs[0].partner_id.city"/>
+                                <t t-esc="docs[0].partner_id.zip"/><br/>
+                                <t t-esc="docs[0].partner_id.state_id.name"/>
+                                <t t-esc="docs[0].partner_id.country_id.name"/><br/><br/>
+                                <span style="display:inline-block; width:100px;"><b>STATE</b></span> :
+                                <t t-esc="docs[0].partner_id.state_id.name"/>
+                                <br/>
+                                <span style="display:inline-block; width:100px;"><b>GSTIN/UIN</b></span> :
+                                <t t-esc="docs[0].partner_id.vat or ''"/>
+                                <br/>
+                                <span style="display:inline-block; width:100px;"><b>PAN No</b></span> :
+                                <t t-esc="docs[0].partner_id.l10n_in_pan_entity_id.name or ''"/>
+                                <br/>
+                                <span style="display:inline-block; width:100px;"><b>MSME No</b></span> :
+                                <t t-esc="docs[0].partner_id.msme or ''"/>
+                            </td>
+
+                            <!--<td style="width:2%; border-left:2px solid black;"/>-->
+
+                            <td style="width:60%; vertical-align:top;">
+                                <table style="width:100%; padding: 0px;border-bottom:none; border-top:none; border-left:none; border-right:none;">
+                                    <span style="display:inline-block; width:100px;"><b>IRN</b></span> :
+                                    <t/><br/>
+
+                                    <span style="display:inline-block; width:100px;"><b>Ack No.</b></span> :
+                                    <span style="display:inline-block; width:170px;">
+                                        <t/>
+                                    </span>
+                                    
+                                    <span style="display:inline-block; width:100px;"><b>Ack Date</b></span> :
+                                    <t/>
+                                    <br/>
+                                    <span style="display:inline-block; width:100px;"><b>E-Way Bill</b></span> :
+                                    <span style="display:inline-block; width:170px;">
+                                        <t/>
+                                    </span>
+                                    
+                                    <span style="display:inline-block; width:100px;"><b>Date</b></span> :
+                                    <t/>
+                                    <hr/>
+                                    <span style="display:inline-block; width:100px;"><b>Invoice No</b></span> :
+                                    <span style="display:inline-block; width:170px;">
+                                        <t t-esc="docs[0].name"/>
+                                    </span>
+                                    
+                                    <span style="display:inline-block; width:100px;"><b>Date</b></span> :
+                                    <t t-esc="docs[0].invoice_date"/>
+                                    <br/>
+                                    <span style="display:inline-block; width:100px;"><b>D.C. No.</b></span> :
+                                    <span style="display:inline-block; width:170px;">
+                                        <t t-esc="docs[0].invoice_line_ids.sale_line_ids[0].order_id.picking_ids[0].name or''"/>
+                                    </span>
+                                    
+                                    <span style="display:inline-block; width:100px;"><b>Date</b></span> :
+                                    <t t-set="picking" t-value="docs[0].invoice_line_ids.sale_line_ids[:1].order_id.picking_ids[:1]"/>
+                                    <t t-if="picking and picking.scheduled_date">
+                                        <t t-esc="picking.scheduled_date.strftime('%d-%m-%Y')"/>
+                                    </t>
+                                    <br/>
+                                    <span style="display:inline-block; width:100px;"><b>Pmt Terms</b></span> :
+                                    <span style="display:inline-block; width:170px;">
+                                        <t t-esc="docs[0].invoice_payment_term_id.name"/>
+                                    </span>                                   
+                                    <span style="display:inline-block; width:100px;"><b>Due Dt</b></span> :
+                                    <t t-esc="docs[0].invoice_date_due"/>
+                                    <br/>
+                                    <span style="display:inline-block; width:100px;"><b>Supply From</b></span> :
+                                    <span style="display:inline-block; width:170px;">
+                                        <t t-esc="docs[0].company_id.city"/>
+                                    </span>
+                                    <span style="display:inline-block; width:100px;"><b>To</b></span> :
+                                    <t t-esc="docs[0].partner_id.city or ''"/><br/>
+                                    <b>Despatch Through : </b>
+                                    <t t-esc="docs[0].invoice_line_ids.sale_line_ids[0].order_id.transport"/><br/>
+                                    <span style="display:inline-block; width:100px;"><b>L.R. No.</b></span> :
+                                    <span style="display:inline-block; width:170px;">
+                                        <t t-esc="docs[0].invoice_line_ids.sale_line_ids[0].order_id.lr"/>
+                                    </span>
+                                    
+                                    <span style="display:inline-block; width:100px;"><b>Date</b></span> :
+                                    <t t-esc="docs[0].invoice_line_ids.sale_line_ids[0].order_id.lr_date and docs[0].invoice_line_ids.sale_line_ids[0].order_id.lr_date.strftime('%d-%m-%Y')
+                                      or ''"/>
+                                    <br/>
+                                    <span style="display:inline-block; width:100px;"><b>Vehicle No.</b></span> :
+                                    <t t-esc="docs[0].invoice_line_ids.sale_line_ids[0].order_id.vehicle"/>
+                                    <br/>
+                                    <span style="display:inline-block; width:150px;"><b>No Of Packages</b></span> :
+                                    <t t-esc="docs[0].invoice_line_ids.sale_line_ids[0].order_id.package"/>
+                                    <br/>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="width:100%; border-collapse:collapse; border:2px solid black;">
+                        <tr>
+                            <td style="width:38%; vertical-align:top;">
+                                <b style="font-weight:bold;">Consignee :</b>
+                                <b><t t-esc="docs[0].partner_id.name"/></b><br/>
+                                <t t-esc="docs[0].partner_id.street"/><br/>
+                                <t t-esc="docs[0].partner_id.city"/>
+                                <t t-esc="docs[0].partner_id.zip"/><br/>
+                                <t t-esc="docs[0].partner_id.state_id.name"/>
+                                <t t-esc="docs[0].partner_id.country_id.name"/><br/>
+                                <span style="display:inline-block; width:100px;"><b>STATE</b></span> :
+                                <t t-esc="docs[0].partner_id.state_id.name"/>
+                                <br/>
+                                <span style="display:inline-block; width:100px;"><b>GSTIN/UIN</b></span> :
+                                <t t-esc="docs[0].partner_id.vat or ''"/>
+                                <br/>
+                                <span style="display:inline-block; width:100px;"><b>PAN No</b></span> :
+                                <t t-esc="docs[0].partner_id.l10n_in_pan_entity_id.name or ''"/>
+                                <br/>
+                                <span style="display:inline-block; width:100px;"><b>MSME No</b></span> :
+                                <t t-esc="docs[0].partner_id.msme or ''"/>
+                                
+                            </td>
+
+                            <!--<td style="width:2%; border-left:2px solid black;"/>-->
+
+                            <td style="width:60%; vertical-align:top;">
+                                <table style="width:100%; padding: 0px; margin: 0px; border-bottom:none; border-top:none; border-left:none; border-right:none;">
+                                    <span style="display:inline-block; width:100px;"><b>Bank Name</b></span> :
+                                    <t t-esc="docs[0].partner_id.bank_ids[:1].bank_id.name"/>
+                                    <br/>
+                                    <span style="display:inline-block; width:100px;"><b>Branch Name</b></span> :
+                                    <t t-esc="docs[0].partner_id.bank_ids[:1].bank_id.name"/>
+                                    <br/>
+                                    <span style="display:inline-block; width:100px;"><b>Bank A/c No</b></span> :
+                                    <t t-esc="docs[0].partner_id.bank_ids[:1].acc_number"/>
+                                    <br/>
+                                    <span style="display:inline-block; width:100px;"><b>Bank IFS No</b></span> :
+                                    <t t-esc="docs[0].partner_id.bank_ids[:1].bank_id.bic"/><br/>
+                                    <hr/>
+                                    <span style="display:inline-block; width:100px;"><b>Remarks</b></span> : <t t-esc="docs[0].narration"/>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="table table-sm border" style="width : 100%; margin:0px; border-spacing:0px; border:2px solid black;">
+                        <thead>
+                            <tr>
+                                <th style="text-transform:none; height:30px; font-weight: bold;">Sr No.</th>
+                                <th style="text-transform:none; height:30px; font-weight: bold;">Order No.</th>
+                                <th style="text-transform:none; height:30px; font-weight: bold;">Part No</th>
+                                <th style="text-transform:none; height:30px; font-weight: bold;">Description of Goods</th>
+                                <th style="text-transform:none; height:30px; font-weight: bold;">G-ST</th>
+                                <th style="text-transform:none; height:30px; font-weight: bold;">Nos</th>
+                                <th style="text-transform:none; height:30px; font-weight: bold;">Qty</th>
+                                <th style="text-transform:none; height:30px; font-weight: bold;">Unit</th>
+                                <th style="text-transform:none; height:30px; font-weight: bold;">Rate</th>
+                                <th style="text-transform:none; height:30px; font-weight: bold;">Basic Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="counter" t-value="1"/>
+                            <t t-set="tot_qty" t-value="0"/>
+                            <t t-set="tot_crt" t-value="0"/>
+                            <t t-set="tot_amt" t-value="0"/>
+                            <t t-foreach="docs.invoice_line_ids" t-as="line">
+                                <tr>
+                                    <td style="height:30px;"><span t-esc="counter"/></td>
+
+                                    <td style="height:30px;">
+                                        <span t-esc="line.sale_line_ids[0].order_id.name"/>
+                                    </td>
+                                    <td style="height:30px;">
+                                        <span t-esc="line.product_id[0].default_code"/>
+                                    </td>
+
+                                    <td style="height:30px;">
+                                        <span t-esc="line.product_id.name"/>
+                                    </td>
+                                    <td style="height:30px;">
+                                        <span t-esc="line.tax_ids.name"/>
+                                    </td>
+
+                                    <td style="height:30px;">
+                                        <span t-esc="line.sale_line_ids[0].nos"/>
+                                    </td>
+
+                                    <td style="height:30px;">
+                                        <span t-esc="line.quantity"/>
+                                    </td>
+
+                                    <td style="height:30px;">
+                                        <span t-esc="line.product_uom_id.name"/>
+                                    </td>
+
+                                    <td style="height:30px;">
+                                        <span t-esc="line.price_unit"/>
+                                    </td>
+                                    <td style="height:30px;">
+                                        <span t-esc="line.price_subtotal"/>
+                                    </td>
+                                </tr>
+                                <t t-set="counter" t-value="counter + 1"/>
+                                <t t-set="tot_qty" t-value="tot_qty + (line.quantity or 0)"/>
+                                <t t-set="tot_crt" t-value="tot_crt + (line.sale_line_ids[0].nos or 0)"/>
+                                <t t-set="tot_amt" t-value="tot_amt + (line.price_subtotal or 0)"/>
+                            </t>
+                            <tr style="font-weight:bold;">
+                                <td colspan="4"></td>
+                                <td><b>Quantity</b></td>
+                                <td><span t-esc="tot_crt"/></td>
+                                <td><span t-esc="tot_qty"/></td>
+                                <td></td>
+                                <td><b>Total</b></td>
+                                <td><span t-esc="tot_amt"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table style="width:100%; border-collapse:collapse; border:1px solid black; font-size:20px;">
+                        <tr>
+                            <th rowspan="2" style="border:1px solid black;">HSN/SAC</th>
+                            <th colspan="3"/>
+                            <th rowspan="2" style="border:1px solid black;">Taxable Value</th>
+                            <th colspan="2" style="border:1px solid black;">IGST</th>
+                            <th rowspan="2" style="border:1px solid black;">Total Tax Amount</th>
+                            <th colspan="2" style="border:1px solid black;"></th>
+                            <th rowspan="2" style="border:1px solid black;"></th>
+                        </tr>
+                        <tr>
+                            <th colspan="3"/>
+                            <th style="border:1px solid black;">Rate</th>
+                            <th style="border:1px solid black;">Amount</th>
+                            <th style="border:1px solid black;">Output IGST<t t-esc="int(sum(line.tax_ids.mapped('amount')))"/>%</th>
+                            <th style="border:1px solid black; text-align:right;">
+                                <span t-field="docs[0].amount_tax"/>
+                            </th>
+                        </tr>
+
+                        <tr>
+                            <td style="border:1px solid black;"><t t-esc="docs[0].invoice_line_ids[0].product_id.l10n_in_hsn_code or ''"/></td>
+                            <td colspan="3"></td>
+
+                            <td style="border:1px solid black; text-align:right;">
+                                <span t-field="docs[0].amount_untaxed"/>
+                            </td>
+                            <td style="border:1px solid black; text-align:center;"><span t-esc="int(sum(line.tax_ids.mapped('amount')))"/>%</td>
+                            <td style="border:1px solid black; text-align:right;">
+                                <span t-field="docs[0].amount_tax"/>
+                            </td>
+                            <td style="border:1px solid black; text-align:right;">
+                                <span t-field="docs[0].amount_tax"/>
+                            </td>
+                            <td style="border:1px solid black;">Round Off A/c ? Sales</td>
+                            <td style="border:1px solid black; text-align:right;">
+                                <span t-esc="(docs[0].amount_total - (docs[0].amount_untaxed + docs[0].amount_tax))"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td style="border:1px solid black; text-align:right; font-weight:bold;">Total</td>
+
+                            <td style="border:1px solid black; text-align:right; font-weight:bold;">
+                                <span t-field="docs[0].amount_untaxed"/>
+                            </td>
+                            <td></td>
+                            <td style="border:1px solid black; text-align:right; font-weight:bold;">
+                                <span t-field="docs[0].amount_tax"/>
+                            </td>
+                            <td style="border:1px solid black; text-align:right; font-weight:bold;">
+                                <span t-field="docs[0].amount_tax"/>
+                            </td>
+                            <!-- <td colspan="2"></td> -->
+                            <td style="border:1px solid black; font-weight:bold;">Grand Total</td>
+                            <td style="border:1px solid black; text-align:right; font-weight:bold;">
+                                 <span t-field="docs[0].amount_total"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table style="width:100%; border-collapse:collapse; border:1px solid black; font-size:14px;">
+                        <tr>
+                            <td style="width:70%; padding:6px;">
+                                <b>Company’s GSTIN/UIN :</b> <t t-esc="docs[0].company_id.vat"/><br/>
+                                <b>Company’s CIN No. :</b> <t t-esc="docs[0].company_id.company_registry"/><br/>
+                                <b>Company’s PAN No. :</b> <t t-esc="docs[0].company_id.l10n_in_pan_entity_id.name"/><br/>
+                                <b>UDYAM No. :</b> <t t-esc="docs[0].company_id.udyam"/><br/>
+                            </td>
+                            <td style="width:30%; border-left:1px solid black;"></td>
+                        </tr>
+                    
+                        <tr>
+                            <td colspan="2" style="border-top:1px solid black; padding:6px;">
+                                <b>Tax Value :</b>
+                                <t t-esc="docs[0].currency_id.amount_to_text(docs[0].amount_tax)"/>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td colspan="2" style="border-top:1px solid black; padding:6px;">
+                                <b>Invoice Value :</b>
+                                <t t-esc="docs[0].currency_id.amount_to_text(docs[0].amount_total)"/>
+                            </td>
+                        </tr>
+
+                    </table>
+
+                    <table style="width:100%; border-collapse:collapse; border:1px solid black;">
+                        <tr>
+                            <td colspan="2" style="padding:6px;">
+                                <b>Declaration :</b><br/>
+                                We declare that this invoice shows the actual price of the goods described and that all particulars
+                                are true and correct. Note :- [1] We do not accept any responsibility for loss, damage breakage or
+                                shortage in transit and please do not return such damaged goods. [2] Our responsibility ceases on
+                                delivery of the goods to Carriers. [3] Interest @ 21% p.a. will be charged for payments remaining unpaid
+                                after due date.
+                            </td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="width:60%; height:80px; padding:6px;">
+                                <b>Customer’s Seal and Signature</b>
+                            </td>
+                            <td style="width:40%; text-align:right; padding:6px;">
+                                <b>For KRANTI POLYTECH PVT. LTD.</b><br/><br/>
+                                <b>Authorised Signatory</b>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>                  
+            <table class="table table-borderless" style="width:100%; border-collapse:collapse; margin-top:30px; border-bottom:2px solid black;">
+                <tr>
+                    <td style="text-align:center; font-size:25px; font-weight:bold;"><strong><u><b>e-Way Bill</b></u></strong></td>
+                </tr>
+              
+                <tr>
+                    <td style="width:70%; vertical-align:top; padding-top:15px;">
+                        <table class="table table-borderless" style="width:100%; font-size:15px; border:none;">
+                            <td></td><br/>
+                            <td></td><br/>
+                            <span style="display:inline-block; width:100px;"><b>Doc No.</b></span> : Tax Invoice - 
+                            <t t-esc="docs[0].name"/>
+                            <br/>
+                            <span style="display:inline-block; width:100px;"><b>Date</b></span> :
+                            <t t-esc="docs[0].invoice_date"/>
+                            <br/><br/>
+                            <span style="display:inline-block; width:100px;"><b>IRN</b></span> :
+                            <t/>
+                            <br/>
+                            <span style="display:inline-block; width:100px;"><b>Ack No.</b></span> :
+                            <t/><br/>
+                            <span style="display:inline-block; width:100px;"><b>Ack Date</b></span> :
+                            <t/><br/>
+                            
+                        </table>
+                    </td>
+
+                    <td style="width:30%; text-align:center; vertical-align:top;">
+                        <b style="font-size:20px;">e-Way Bill</b><br/><br/>
+                        <img t-att-src="'/kranti_report/static/description/eway_qr.png'" style="height:180px; width:180px;"/>
+                    </td>
+                </tr>
+            </table>
+            <td style="width:2%; border-bottom:2px solid black;"/>
+
+            <table class="table table-borderless" style="width:100%; font-size:15px; border-bottom:2px solid black;">
+                <tr>
+                    <td style="font-size:20px;" colspan="3"><b>1. e-Way Bill Details</b></td>
+                </tr>
+                <tr>
+                    <td style="width:33%;"><b>e-Way Bill No.</b> : <t/></td>
+                    <td style="width:33%;"><b>Mode</b>: <t/></td>
+                    <td style="width:33%;"><b>Generated Date</b> : <t/></td>
+                </tr>
+                <tr>
+                    <td ><b style="width:100px;">Generated By</b> : <t t-esc="docs[0].invoice_user_id.name"/></td>
+                    <td><b style="width:100px;">Approx Distance</b> : <t/></td>
+                    <td><b style="width:100px;">Valid Upto</b> : <t t-esc="docs[0].invoice_date_due"/></td>
+                </tr>
+                <tr>
+                    <td><b>Supply Type</b> : <t/></td>
+                    <td><b>Transaction Type</b> : <t/></td>
+                    <td></td>
+                </tr>
+            </table>
+            <td style="width:2%; border-bottom:2px solid black;"/>
+            <table class="table table-borderless" style="width:100%; font-size:15px; border-bottom:2px solid black;">
+                <tr>
+                    <td style="font-size:20px;" colspan="2"><b>2. Address Details</b></td>
+                </tr>
+                <tr>
+                    <td style="width:50%; vertical-align:top;">
+                        <b>From</b><br/>
+                        <t t-esc="docs[0].company_id.name"/><br/>
+                        GSTIN : <t t-esc="docs[0].company_id.vat"/><br/>
+                        <t t-esc="docs[0].company_id.state_id.name"/>
+                    </td>
+                    <td style="width:50%; vertical-align:top;">
+                        <b>To</b><br/>
+                        <t t-esc="docs[0].partner_id.name"/><br/>
+                        GSTIN : <t t-esc="docs[0].partner_id.vat"/><br/>
+                        <t t-esc="docs[0].partner_id.state_id.name"/>
+                    </td>
+                </tr><br/>
+                <tr>
+                    <td style="width:50%; vertical-align:top;">
+                        <b>Dispatch From</b><br/>
+                        <t t-esc="docs[0].company_id.name"/><br/>
+                        GSTIN : <t t-esc="docs[0].company_id.vat"/><br/>
+                        <t t-esc="docs[0].company_id.state_id.name"/>
+                    </td>
+                    <td style="width:50%; vertical-align:top;">
+                        <b>Ship To</b><br/>
+                        <t t-esc="docs[0].partner_id.name"/><br/>
+                        GSTIN : <t t-esc="docs[0].partner_id.vat"/><br/>
+                        <t t-esc="docs[0].partner_id.state_id.name"/>
+                    </td>
+                </tr>
+            </table>
+            <td style="width:2%; border-bottom:2px solid black;"/>
+            <table class="table table-borderless" style="width:100%; font-size:15px; border-bottom:2px solid black;">
+                <tr>
+                    <td style="font-size:20px; border-bottom:2px solid black;" colspan="5"><b>3. Goods Details</b></td>
+                </tr>
+                <tr>
+                    <th style="text-transform:none; height:30px; font-weight: bold;">HSN Code.</th>
+                    <th style="text-transform:none; height:30px; font-weight: bold;">Product Name &amp; Desc</th>
+                    <th style="text-transform:none; height:30px; font-weight: bold;">Quantity</th>
+                    <th style="text-transform:none; height:30px; font-weight: bold;">Taxable Amt</th>
+                    <th style="text-transform:none; height:30px; font-weight: bold;">Tax Rate(I)</th>                        
+                </tr>
+                <tbody>
+                    <t t-foreach="docs.invoice_line_ids" t-as="line">
+                        <tr>
+                            <td style="height:30px;">
+                                <span t-esc="line.product_id.l10n_in_hsn_code or ''"/>
+                            </td>
+
+                            <td style="height:30px;">
+                                <span t-esc="line.product_id.name"/>
+                            </td>
+                            <td style="height:30px;">
+                                <span t-esc="line.quantity"/>
+                            </td>
+                            <td style="height:30px;">
+                                <span t-esc="docs[0].amount_total"/>
+                            </td>
+                            <td style="height:30px;">
+                                <span t-esc="line.tax_ids.name"/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+            <td style="width:2%; border-bottom:2px solid black;"/>
+            <table class="table table-borderless" style="width:100%; font-size:15px; border-bottom:2px solid black;">
+                <tr>
+                    <td style="width:33%;"><b>Tot.Taxable Amt</b> : <t t-esc="docs[0].amount_untaxed"/></td>
+                    <td style="width:33%;"><b>Other Amt</b>: <t t-esc="(docs[0].amount_total - (docs[0].amount_untaxed + docs[0].amount_tax))"/></td>
+                    <td ><b style="width:33%;">Total Inv Amt</b> : <t t-esc="docs[0].amount_total"/></td>
+                </tr>
+                <tr>
+                    <td style="width:33%;" colspan="5"><b>IGST Amt</b> : <t t-esc="docs[0].amount_tax"/></td>
+                </tr>
+            </table>
+            <td style="width:2%; border-bottom:2px solid black;"/>
+            <table class="table table-borderless" style="width:100%; font-size:15px; border-bottom:2px solid black;">
+                <tr>
+                    <td style="font-size:20px;" colspan="2"><b>4. Transportation Details</b></td>
+                </tr>
+                <tr>
+                    <td style="width:50%;"><b>Transporter ID</b> : <t/></td>
+                    <td style="width:50%;"><b>Doc No.</b>: <t t-esc="docs[0].name"/></td>
+                </tr>
+                <tr>
+                    <td ><b style="width:50%;">Name</b> : <t/></td>
+                    <td><b style="width:50%;">Date</b> : <t t-esc="docs[0].invoice_date"/></td>
+                </tr>
+            </table>
+            <td style="width:2%; border-bottom:2px solid black;"/>
+            <table class="table table-borderless" style="width:100%; font-size:15px; border-bottom:2px solid black;">
+                <tr>
+                    <td style="font-size:20px;" colspan="3"><b>5. Vehicle Details</b></td>
+                </tr>
+                <tr>
+                    <td style="width:33%;"><b>Vehicle No.</b> : <t t-esc="docs[0].invoice_line_ids.sale_line_ids[0].order_id.vehicle"/></td>
+                    <td style="width:33%;"><b>From</b>: <t/></td>
+                    <td ><b style="width:33%;">CEWB No.</b> : <t/></td>
+                </tr>
+            </table>
+            <td style="width:2%; border-bottom:2px solid black;"/>
+        </div>
+      </t>
+    </t>
+  </template>
+
+  <record id="action_report_invoice" model="ir.actions.report">
+    <field name="name">Print Invoice</field>
+    <field name="model">account.move</field>
+    <field name="binding_model_id" ref="account.model_account_move"/>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">kranti_report.report_invoice_pdf</field>
+    <field name="report_file">kranti_report.report_invoice_pdf</field>
+    <field name="print_report_name">'Invoice - %s' % (object.name)</field>
+  </record>
+</odoo>

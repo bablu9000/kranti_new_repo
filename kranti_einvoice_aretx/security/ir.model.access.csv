@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sale_order_line_package,sale.order.line.package,model_sale_order_line_package,,1,1,1,1
+access_package_selection_wizard,package.selection.wizard,model_package_selection_wizard,,1,1,1,1
+access_package_selection_wizard_line,package.selection.wizard.line,model_package_selection_wizard_line,,1,1,1,1
+access_ewaybill_transporter_customer_user,ewaybill.transporter.customer.user,model_ewaybill_transporter_customer,base.group_user,1,1,1,1

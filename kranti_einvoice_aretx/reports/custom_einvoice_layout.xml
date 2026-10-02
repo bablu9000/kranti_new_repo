@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="custom_einvoice_layout">
+    
+        <!-- ======================= HEADER ====================== -->
+
+        <div class="header custom_einvoice_layout">
+
+            <div style="
+                width: 100%;
+                padding-bottom: 8px;
+                overflow: hidden;
+            ">
+
+                <!-- ================= LEFT SIDE ================= -->
+
+                <div style="
+                    width: 75%;
+                    float: left;
+                    text-align: left;
+                ">
+
+                    <!-- Company Logo -->
+                    <div style="
+                        text-align: left;
+                        margin-bottom: 5px;
+                    ">
+
+                        <img t-if="company.logo"
+                             t-att-src="image_data_uri(company.logo)"
+                             style="
+                                 max-height: 45px;
+                                 max-width: 120px;
+                                 width: auto;
+                                 height: auto;
+                             "/>
+
+                    </div>
+
+
+                    <!-- Company Details -->
+                    <div style="
+                        text-align: left;
+                        font-size: 13px;
+                        line-height: 1.4;
+                    ">
+
+                        <strong style="font-size: 17px;">
+                            <span t-esc="company.name"/>
+                        </strong>
+
+                        <br/>
+
+                        <span t-if="company.street"
+                              t-esc="company.street"/>
+
+                        <br t-if="company.street"/>
+
+                        <span t-if="company.street2"
+                              t-esc="company.street2"/>
+
+                        <br t-if="company.street2"/>
+
+                        <span t-if="company.city"
+                              t-esc="company.city"/>
+
+                        <span t-if="company.state_id">
+                            ,
+                            <span t-esc="company.state_id.name"/>
+                        </span>
+
+                        <span t-if="company.zip">
+                            -
+                            <span t-esc="company.zip"/>
+                        </span>
+
+                        <br/>
+
+                        <span t-if="company.country_id"
+                              t-esc="company.country_id.name"/>
+
+                        <br/>
+
+                        <strong>GSTIN/UIN:</strong>
+                        <span t-esc="company.vat or ''"/>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= RIGHT SIDE ================= -->
+
+                <div style="
+                    width: 25%;
+                    float: right;
+                    text-align: center;
+                ">
+
+                    <div style="
+                        font-size: 12px;
+                        margin-bottom: 3px;
+                        text-align: center;
+                        color: #8B4513;
+                    ">
+                        Our quality is our image
+                    </div>
+
+
+                    <!-- E-Invoice QR -->
+                    <t t-if="edi_json.get('SignedQRCode')">
+
+                        <div style="
+                            font-size: 11px;
+                            margin-bottom: 3px;
+                            text-align: center;
+                        ">
+                            E-Invoice
+                        </div>
+
+                        <img
+                            t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;quiet=%s'
+                                % (
+                                    'QR',
+                                    edi_json['SignedQRCode'],
+                                    500,
+                                    500,
+                                    0
+                                )"
+                            style="
+                                width: 70px;
+                                height: 70px;
+                            "
+                        />
+
+                    </t>
+
+                </div>
+
+
+                <!-- Clear floats -->
+                <div style="clear: both;"></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================= BODY ======================== -->
+
+        <div class="article custom_einvoice_layout"
+             t-att-data-oe-model="o._name"
+             t-att-data-oe-id="o.id">
+
+            <!-- Existing Invoice Body -->
+            <t t-out="0"/>
+
+        </div>
+
+
+        <!-- ======================= FOOTER ====================== -->
+
+        <div class="footer custom_einvoice_layout custom_einvoice_footer">
+        
+
+            <div style="
+                border-top: 1px solid black;
+                padding-top: 5px;
+                width: 100%;
+                overflow: hidden;
+            ">
+
+                <!-- ================= LEFT ================= -->
+
+                <div style="
+                    width: 70%;
+                    float: left;
+                    text-align: left;
+                ">
+
+                    <span t-esc="company.email or ''"/>
+                    <span t-esc="company.vat or ''"/>
+
+                </div>
+
+
+                <!-- ================= RIGHT ================= -->
+
+                <div style="
+                    width: 30%;
+                    float: right;
+                    text-align: right;
+                ">
+
+                    Page
+                    <span class="page"/>
+                    /
+                    <span class="topage"/>
+
+                </div>
+
+
+                <div style="clear: both;"></div>
+
+            </div>
+
+        </div>
+
+    </template>
+
+</odoo>
