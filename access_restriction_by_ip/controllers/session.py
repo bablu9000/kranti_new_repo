@@ -29,7 +29,8 @@ class AccessRestrict(Session):
             s.connect(("8.8.8.8", 80))
             ip_address=s.getsockname()[0]
             s.close()
-            user = request.env['res.users'].sudo().browse(auth_info['uid']).exists()
+            # user = request.env['res.users'].sudo().browse(auth_info['uid']).exists()
+            user = env['res.users'].sudo().browse(auth_info['uid']).exists()
             if user and user.allowed_ip_ids:
                 ip_list = set(user.allowed_ip_ids.mapped('ip_address'))
                 if ip_address not in ip_list:

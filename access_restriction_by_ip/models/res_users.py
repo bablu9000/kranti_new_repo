@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models
 import socket
+from odoo.http import request
 
 class ResUsersInherit(models.Model):
     """Inherited res_users for adding new field allowed ip_ids"""
@@ -17,4 +18,5 @@ class ResUsersInherit(models.Model):
         ip_address=s.getsockname()[0]
         self.current_ip = ip_address
         s.close()
+        # self.current_ip = request.httprequest.remote_addr
         
