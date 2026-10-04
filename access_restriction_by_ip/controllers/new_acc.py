@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import odoo
+from odoo import fields, models
 
 from odoo import http
 from odoo.addons.web.controllers import home
@@ -8,6 +9,9 @@ from odoo.addons.web.controllers.utils import ensure_db
 from odoo.http import request
 from odoo.tools.translate import LazyTranslate, _
 import socket
+import logging
+
+_logger = logging.getLogger(__name__)
 
 _lt = LazyTranslate(__name__)
 
@@ -38,6 +42,145 @@ CREDENTIAL_PARAMS = ['login', 'password', 'type']
 
 
 class Home(home.Home):
+
+    def _send_login_whatsapp_alert(
+        self,
+        user_id,
+        login,
+        ip_address,
+    ):
+        """
+        Send WhatsApp notification after successful login.
+        """
+        try:
+
+            # ---------------------------------------------------------
+            # Get user
+            # ---------------------------------------------------------
+
+            user = request.env['res.users'].sudo().browse(user_id)
+
+            if not user.exists():
+                _logger.warning(
+                    "Login WhatsApp Alert: user %s does not exist.",
+                    user_id,
+                )
+                return
+
+            # ---------------------------------------------------------
+            # WhatsApp recipient
+            # ---------------------------------------------------------
+            #
+            # Change this number to your administrator/security
+            # WhatsApp number.
+            #
+            # Country code required.
+            #
+            # Example:
+            # India +91 9876543210
+            # => 919876543210
+            #
+            # ---------------------------------------------------------
+
+            whatsapp_number = (
+                request.env['ir.config_parameter']
+                .sudo()
+                .get_param(
+                    'login_whatsapp_alert.recipient_number'
+                )
+            )
+
+            if not whatsapp_number:
+                _logger.warning(
+                    "Login WhatsApp Alert: "
+                    "recipient number is not configured."
+                )
+                return
+
+            # ---------------------------------------------------------
+            # Create login alert record
+            # ---------------------------------------------------------
+
+            alert = request.env[
+                'odoo.login.alert'
+            ].sudo().create({
+                'name': 'Login Alert',
+                'user_id': user.id,
+                'login': login or user.login,
+                'ip_address': ip_address or '',
+                'login_datetime': fields.Datetime.now(),
+                'phone': whatsapp_number,
+                'status': 'success',
+                'company_id': user.company_id.id,
+            })
+
+            # ---------------------------------------------------------
+            # Find WhatsApp template
+            # ---------------------------------------------------------
+
+            template = request.env[
+                'whatsapp.template'
+            ].sudo().search([
+                ('name', '=', 'Odoo Login Alert'),
+            ], limit=1)
+            ('status', '=', 'approved'),
+
+            if not template:
+                _logger.warning(
+                    "Login WhatsApp Alert: "
+                    "approved WhatsApp template "
+                    "'doo Login Alert' was not found."
+                )
+                return
+
+            # ---------------------------------------------------------
+            # Verify template model
+            # ---------------------------------------------------------
+
+            if (
+                template.model_id
+                and template.model_id.model
+                != 'odoo.login.alert'
+            ):
+                _logger.warning(
+                    "Login WhatsApp Alert: template "
+                    "'doo Login Alert' is configured for model %s "
+                    "instead of odoo.login.alert.",
+                    template.model_id.model,
+                )
+                return
+
+            # ---------------------------------------------------------
+            # Native Odoo WhatsApp Composer
+            # ---------------------------------------------------------
+
+            composer = request.env[
+                'whatsapp.composer'
+            ].sudo().create({
+                'res_ids': str(alert.ids),
+                'res_model': 'odoo.login.alert',
+                'wa_template_id': template.id,
+            })
+
+            composer._send_whatsapp_template(
+                force_send_by_cron=True
+            )
+
+            _logger.info(
+                "Login WhatsApp Alert sent successfully. "
+                "User=%s, Login=%s, IP=%s",
+                user.name,
+                login,
+                ip_address,
+            )
+
+        except Exception:
+            # WhatsApp failure should NEVER prevent
+            # the user from logging into Odoo.
+            _logger.exception(
+                "Login WhatsApp Alert failed."
+            )
+
 
     @http.route(
         '/web/login',
@@ -99,10 +242,29 @@ class Home(home.Home):
             # ------------------------------------------------------
             # Get REAL CLIENT IP
             # ------------------------------------------------------
-            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            s.connect(("8.8.8.8", 80))
-            ip_address=s.getsockname()[0]
-            s.close()
+            http_request = request.httprequest
+            forwarded_for = http_request.headers.get(
+                'X-Forwarded-For'
+            )
+
+            real_ip = http_request.headers.get(
+                'X-Real-IP'
+            )
+            ip_address = False
+            if forwarded_for:
+                client_ip = (
+                    forwarded_for
+                    .split(',')[0]
+                    .strip()
+                )
+
+                if client_ip:
+                    ip_address = client_ip
+                
+            elif real_ip and ip_address == False:
+                ip_address = real_ip.strip()
+            else:
+                ip_address = http_request.remote_addr
             
             # ip_address = request.httprequest.remote_addr
 
@@ -162,7 +324,19 @@ class Home(home.Home):
                             credential
                         )
 
+
                         request.params['login_success'] = True
+
+                        # print(ddd)
+                        # ---------------------------------------------------------
+                        # WhatsApp alert
+                        # ---------------------------------------------------------
+
+                        self._send_login_whatsapp_alert(
+                            user_id=auth_info['uid'],
+                            login=login,
+                            ip_address=ip_address,
+                        )
 
                         return request.redirect(
                             self._login_redirect(
@@ -274,5 +448,6 @@ class Home(home.Home):
         response.headers['Content-Security-Policy'] = (
             "frame-ancestors 'self'"
         )
+
 
         return response

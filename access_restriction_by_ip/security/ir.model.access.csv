@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_allowed_ips_user,access.allowed.ips.user,access_restriction_by_ip.model_allowed_ips,base.group_user,1,1,1,1
+access_odoo_login_alert_user,access.odoo.login.alert.user,access_restriction_by_ip.model_odoo_login_alert,base.group_user,1,1,1,1

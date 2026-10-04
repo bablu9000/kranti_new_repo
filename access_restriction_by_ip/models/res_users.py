@@ -13,10 +13,42 @@ class ResUsersInherit(models.Model):
     current_ip = fields.Char(string='Current IP')
 
     def action_check_current_ip(self):
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8", 80))
-        ip_address=s.getsockname()[0]
-        self.current_ip = ip_address
-        s.close()
+        # s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        # s.connect(("8.8.8.8", 80))
+        # ip_address=s.getsockname()[0]
+        # self.current_ip = ip_address
+        # s.close()
         # self.current_ip = request.httprequest.remote_addr
+
+        # record.write({'current_ip' :record._get_client_ip()})
+
+        http_request = request.httprequest
+        forwarded_for = http_request.headers.get(
+            'X-Forwarded-For'
+        )
+
+        real_ip = http_request.headers.get(
+            'X-Real-IP'
+        )
+        client_ip = False
+        if forwarded_for:
+            client_ip = (
+                forwarded_for
+                .split(',')[0]
+                .strip()
+            )
+
+            # if client_ip:
+            #     client_ip = client_ip
+
+        # ----------------------------------------------------------
+        # X-Real-IP
+        # ----------------------------------------------------------
+
+
+        elif real_ip and client_ip == False:
+            client_ip = real_ip.strip()
+        else:
+            client_ip = http_request.remote_addr
+        self.current_ip = client_ip
         
