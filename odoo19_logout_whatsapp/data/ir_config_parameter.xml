@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="param_logout_whatsapp_enabled" model="ir.config_parameter">
+        <field name="key">logout_whatsapp_notification.enabled</field>
+        <field name="value">True</field>
+    </record>
+    <record id="param_logout_whatsapp_phone" model="ir.config_parameter">
+        <field name="key">logout_whatsapp_notification.phone</field>
+        <field name="value"></field>
+    </record>
+    <!-- <record id="param_logout_whatsapp_template_xmlid" model="ir.config_parameter">
+        <field name="key">logout_whatsapp_notification.template_xmlid</field>
+        <field name="value"></field>
+    </record> -->
+</odoo>

@@ -11,6 +11,7 @@
      """,
     'author': 'Golu',
     'maintainer': 'Golu',
+    # "depends": ["web", "whatsapp"],
     'data': [
         'security/ir.model.access.csv',
         'views/allowed_ips_view.xml'

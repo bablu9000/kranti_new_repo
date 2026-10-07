@@ -123,7 +123,7 @@ class Home(home.Home):
             ].sudo().search([
                 ('name', '=', 'Odoo Login Alert'),
             ], limit=1)
-            ('status', '=', 'approved'),
+            # ('status', '=', 'approved'),
 
             if not template:
                 _logger.warning(
