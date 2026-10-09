@@ -13,9 +13,13 @@
                     <group>
                         <button name='action_check_current_ip' string='Check Current IP' type='object' class='oe_highlight' />
                         <group>
-                            <field name='current_ip' />
+                            <field name='current_ip'/>
+                            <field name='current_time'/>
                         </group>
-                        <group/>
+                        <group>
+                            <field name='login_time' widget='float_time'/>
+                            <field name='logout_time' widget='float_time'/>
+                        </group>
                     </group>
                     <field name="allowed_ip_ids">
                         <list editable="bottom" delete="1">

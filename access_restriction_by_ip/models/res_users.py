@@ -11,6 +11,9 @@ class ResUsersInherit(models.Model):
                                      string='IP Address',
                                      help="Allowed ip addresses for the user.")
     current_ip = fields.Char(string='Current IP')
+    login_time = fields.Float(string='Login Time')
+    logout_time = fields.Float(string='Logout Time')
+    current_time = fields.Datetime(string='Current Time')
 
     def action_check_current_ip(self):
         # s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -51,4 +54,5 @@ class ResUsersInherit(models.Model):
         else:
             client_ip = http_request.remote_addr
         self.current_ip = client_ip
+        self.current_time = fields.Datetime.now()
         

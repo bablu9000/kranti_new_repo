@@ -2,7 +2,7 @@
 
 import odoo
 from odoo import fields, models
-
+from datetime import timedelta
 from odoo import http
 from odoo.addons.web.controllers import home
 from odoo.addons.web.controllers.utils import ensure_db
@@ -268,25 +268,41 @@ class Home(home.Home):
             
             # ip_address = request.httprequest.remote_addr
 
-            # ------------------------------------------------------
-            # IP RESTRICTION
-            #
-            # If allowed_ip_ids are configured:
-            #     only those IPs can login.
-            #
-            # If no allowed IP is configured:
-            #     normal login is allowed.
-            # ------------------------------------------------------
-            if user.exists() and user.allowed_ip_ids:
+            print('\n\n===XXX=====')
+            start_time = False
+            end_time = False
+            current_date = fields.Datetime.now()
+            if user and user.login_time and user.logout_time:
+                hours = int(user.login_time)
+                minutes = round((user.login_time - hours) * 60)
+                start_time = current_date.replace(
+                    hour=0, minute=0, second=0, microsecond=0
+                ) + timedelta(hours=hours, minutes=minutes)
 
+                print('==login_time=====',round((user.login_time - hours) * 60),(user.login_time - hours),hours)
+                hours = int(user.logout_time)
+                minutes = round((user.logout_time - hours) * 60)
+                end_time = current_date.replace(
+                    hour=0, minute=0, second=0, microsecond=0
+                ) + timedelta(hours=hours, minutes=minutes)
+                
+            print('==start_time=====',start_time)
+            print('==end_time=====',end_time)
+            print('==current_date=====',current_date)
+            if user.exists() and user.allowed_ip_ids:
+                # Check IP
                 allowed_ips = set(
                     user.allowed_ip_ids.mapped('ip_address')
                 )
-
                 if ip_address not in allowed_ips:
-
                     values['error'] = _(
                         'Not allowed to login from this IP.'
+                    )
+
+                # Check Time
+                elif start_time and end_time and not (start_time <= current_date <= end_time):
+                    values['error'] = _(
+                        'Login not allowed at this time.'
                     )
 
                 else:
