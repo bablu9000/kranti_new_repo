@@ -271,7 +271,7 @@ class Home(home.Home):
             print('\n\n===XXX=====')
             start_time = False
             end_time = False
-            current_date = fields.Datetime.now()
+            current_date = fields.Datetime.now() + timedelta(hours=5, minutes=30)
             if user and user.login_time and user.logout_time:
                 hours = int(user.login_time)
                 minutes = round((user.login_time - hours) * 60)
@@ -287,7 +287,6 @@ class Home(home.Home):
                     hour=0, minute=0, second=0, microsecond=0
                 ) + timedelta(hours=hours, minutes=minutes)
             
-            current_date = fields.Datetime.now() + timedelta(hours=5, minutes=30)
             _logger.warning("start_time  %s",start_time,)
             _logger.warning("end_time  %s",end_time,)
             _logger.warning("current_date  %s",current_date,)
@@ -383,56 +382,61 @@ class Home(home.Home):
                 # --------------------------------------------------
                 # No IP restriction configured
                 # --------------------------------------------------
-                try:
-
-                    credential = {
-                        key: value
-                        for key, value in request.params.items()
-                        if key in CREDENTIAL_PARAMS and value
-                    }
-
-                    credential.setdefault(
-                        'type',
-                        'password'
+                if start_time and end_time and not (start_time <= current_date <= end_time):
+                    values['error'] = _(
+                        'Login not allowed at this time.'
                     )
+                else:
+                    try:
 
-                    # CAPTCHA
-                    if request.env[
-                        'res.users'
-                    ]._should_captcha_login(credential):
+                        credential = {
+                            key: value
+                            for key, value in request.params.items()
+                            if key in CREDENTIAL_PARAMS and value
+                        }
 
-                        request.env[
-                            'ir.http'
-                        ]._verify_request_recaptcha_token(
-                            'login'
+                        credential.setdefault(
+                            'type',
+                            'password'
                         )
 
-                    # Authenticate
-                    auth_info = request.session.authenticate(
-                        request.env,
-                        credential
-                    )
+                        # CAPTCHA
+                        if request.env[
+                            'res.users'
+                        ]._should_captcha_login(credential):
 
-                    request.params['login_success'] = True
+                            request.env[
+                                'ir.http'
+                            ]._verify_request_recaptcha_token(
+                                'login'
+                            )
 
-                    return request.redirect(
-                        self._login_redirect(
-                            auth_info['uid'],
-                            redirect=redirect
+                        # Authenticate
+                        auth_info = request.session.authenticate(
+                            request.env,
+                            credential
                         )
-                    )
 
-                except odoo.exceptions.AccessDenied as e:
+                        request.params['login_success'] = True
 
-                    if (
-                        e.args
-                        == odoo.exceptions.AccessDenied().args
-                    ):
-                        values['error'] = _(
-                            'Wrong login/password'
+                        return request.redirect(
+                            self._login_redirect(
+                                auth_info['uid'],
+                                redirect=redirect
+                            )
                         )
-                    else:
-                        values['error'] = e.args[0]
+
+                    except odoo.exceptions.AccessDenied as e:
+
+                        if (
+                            e.args
+                            == odoo.exceptions.AccessDenied().args
+                        ):
+                            values['error'] = _(
+                                'Wrong login/password'
+                            )
+                        else:
+                            values['error'] = e.args[0]
 
         else:
 

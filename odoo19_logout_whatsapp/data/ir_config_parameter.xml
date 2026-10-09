@@ -12,4 +12,15 @@
         <field name="key">logout_whatsapp_notification.template_xmlid</field>
         <field name="value"></field>
     </record> -->
+
+    <record id="ir_cron_auto_logout_users" model="ir.cron">
+        <field name="name">Auto Logout Users</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_auto_logout_users()</field>
+        <field name="interval_number">2</field>
+        <field name="interval_type">minutes</field>
+        <field name="active">True</field>
+    </record>
+
 </odoo>
