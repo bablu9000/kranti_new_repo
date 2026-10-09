@@ -44,7 +44,7 @@ class ResUsers(models.Model):
         template = request.env[
                 'whatsapp.template'
             ].sudo().search([
-                ('name', '=', 'Odoo Logout Alert'),
+                ('name', '=', 'Logout Alert'),
             ], limit=1)
             # ('status', '=', 'approved'),
 
