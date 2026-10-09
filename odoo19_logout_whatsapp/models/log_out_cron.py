@@ -40,16 +40,15 @@ class ResUsers(models.Model):
             print('==end_time=====',end_time)
             print('==current_date=====',current_date)
             if current_date > end_time: 
-                # print('\n\n===',xx)
                 self._invalidate_user_sessions(
-                    user_id=user,
+                    user_id=user.id,
                     database=self.env.cr.dbname,
                 )
 
     # @api.model
     def direct_run_invalidate_user_sessions(self):
         print('\n\n==self.env.cr.dbname=',self.env.cr.dbname)
-        self._invalidate_user_sessions(user_id=self,database=self.env.cr.dbname)
+        self._invalidate_user_sessions(user_id=self.id,database=self.env.cr.dbname)
 
     def _invalidate_user_sessions(self, user_id, database):
         """Invalidate all filesystem sessions for a user in this DB."""
@@ -72,12 +71,11 @@ class ResUsers(models.Model):
             sid = os.path.basename(filepath)
 
             try:
-                user_id._send_logout_whatsapp_notification()
                 session = store.get(sid)
 
                 if (
                     session
-                    and session.get("uid") == user_id.id
+                    and session.get("uid") == user_id
                     and session.get("db") == database
                 ):
                     # Odoo 19 associates rotated session IDs through
@@ -97,5 +95,5 @@ class ResUsers(models.Model):
             _logger.info(
                 "Invalidated %s session identifier(s) for user ID %s",
                 len(identifiers),
-                user_id.id,
+                user_id,
             )
