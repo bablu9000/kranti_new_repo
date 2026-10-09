@@ -278,14 +278,18 @@ class Home(home.Home):
                 start_time = current_date.replace(
                     hour=0, minute=0, second=0, microsecond=0
                 ) + timedelta(hours=hours, minutes=minutes)
-
-                print('==login_time=====',round((user.login_time - hours) * 60),(user.login_time - hours),hours)
+                x = round((user.login_time - hours) * 60),(user.login_time - hours),hours
+                print('==login_time=====',x)
+                _logger.warning("XXXXXXXX  %s",x,)
                 hours = int(user.logout_time)
                 minutes = round((user.logout_time - hours) * 60)
                 end_time = current_date.replace(
                     hour=0, minute=0, second=0, microsecond=0
                 ) + timedelta(hours=hours, minutes=minutes)
-                
+            
+            _logger.warning("start_time  %s",start_time,)
+            _logger.warning("end_time  %s",end_time,)
+            _logger.warning("current_date  %s",current_date,)
             print('==start_time=====',start_time)
             print('==end_time=====',end_time)
             print('==current_date=====',current_date)
