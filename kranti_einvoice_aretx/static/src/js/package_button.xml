@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates xml:space="preserve">
-    <t t-name="kranti_einvoice_aretx.PackageButtonTemplate">
-        <button type="button" class="btn btn-primary" t-on-click="onClick">
-            <i class="fa fa-cubes"/> Packages
-        </button>
-    </t>
-</templates>
