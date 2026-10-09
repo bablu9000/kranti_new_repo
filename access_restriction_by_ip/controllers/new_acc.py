@@ -287,6 +287,7 @@ class Home(home.Home):
                     hour=0, minute=0, second=0, microsecond=0
                 ) + timedelta(hours=hours, minutes=minutes)
             
+            current_date = fields.Datetime.now() + timedelta(hours=5, minutes=30)
             _logger.warning("start_time  %s",start_time,)
             _logger.warning("end_time  %s",end_time,)
             _logger.warning("current_date  %s",current_date,)
