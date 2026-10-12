@@ -9,6 +9,7 @@
     "depends": ["web", "whatsapp"],
     "data": [
         "data/ir_config_parameter.xml",
+        'security/ir.model.access.csv',
     ],
     "installable": True,
     "application": False,

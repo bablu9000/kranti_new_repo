@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_logout_whatsapp_notification_user,access_logout_whatsapp_notification_user,odoo19_logout_whatsapp.model_logout_whatsapp_notification,base.group_user,1,1,1,1
