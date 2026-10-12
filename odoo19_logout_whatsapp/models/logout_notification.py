@@ -12,3 +12,8 @@ class LogoutNotification(models.Model):
     logout_datetime = fields.Datetime(required=True)
     ip_address = fields.Char()
     company_id = fields.Many2one("res.company")
+    user_name = fields.Char(
+        string='User Name',
+        required=True,
+        readonly=True,
+    )

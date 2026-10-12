@@ -14,6 +14,11 @@ class LoginAlert(models.Model):
         readonly=True,
         default='Login Alert',
     )
+    user_name = fields.Char(
+        string='User Name',
+        required=True,
+        readonly=True,
+    )
 
     user_id = fields.Many2one(
         'res.users',
@@ -58,6 +63,7 @@ class LoginAlert(models.Model):
         readonly=True,
         default=lambda self: self.env.company,
     )
+    message = fields.Text()
 
     # def name_get(self):
     #     result = []

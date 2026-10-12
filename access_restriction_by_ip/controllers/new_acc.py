@@ -101,16 +101,35 @@ class Home(home.Home):
             # Create login alert record
             # ---------------------------------------------------------
 
+            # body = (
+            #     "Odoo Logout Notification\n\n"
+            #     "User: %s\n"
+            #     "Logout Time: %s\n"
+            #     "Company: %s\n"
+            #     "Database: %s\n"
+            #     "IP Address: %s"
+            #     % (
+            #         self.display_name,
+            #         fields.Datetime.context_timestamp(self, now).strftime(
+            #             "%d-%b-%Y %H:%M:%S"
+            #         ),
+            #         company,
+            #         self.env.cr.dbname,
+            #         ip,
+            #     )
+            # )
             alert = request.env[
                 'odoo.login.alert'
             ].sudo().create({
                 'name': 'Login Alert',
                 'user_id': user.id,
+                'user_name': user.name,
                 'login': login or user.login,
                 'ip_address': ip_address or '',
                 'login_datetime': fields.Datetime.now(),
                 'phone': whatsapp_number,
                 'status': 'success',
+                # 'message': body,
                 'company_id': user.company_id.id,
             })
 
